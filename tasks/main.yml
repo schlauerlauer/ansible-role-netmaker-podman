@@ -6,6 +6,11 @@
     src: "data"
     dest: "./netmaker/"
 
+- name: "Copy mosquitto config"
+  copy:
+    src: "mosuitto.conf"
+    dest: "./netmaker/"
+
 - name: "Create netmaker pod"
   containers.podman.podman_pod:
     name: "netmaker-pod"
