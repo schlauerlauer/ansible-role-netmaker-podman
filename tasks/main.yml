@@ -23,6 +23,20 @@
     - "{{ netmaker_dashboard_port }}:8080"
     - "{{ netmaker_wireguard_port_range }}:51821-51830/udp"
 
+- name: "Run mosquitto mqtt container"
+  containers.podman.podman_container:
+    pod: "netmaker-pod"
+    name: "netmaker-mqtt"
+    image: "docker.io/library/eclipse-mosquitto:2.0.15"
+    state: "started"
+    restart_policy: "no"
+    recreate: yes
+    tty: no
+    detach: yes
+    volume:
+      - "./netmaker/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:z"
+      - "./netmaker/mosquitto/data:/mosquitto/data"
+
 - name: "Run netmaker server container"
   containers.podman.podman_container:
     pod: "netmaker-pod"
@@ -56,18 +70,16 @@
       net.ipv6.conf.all.forwarding: 1
     volume:
       - "./netmaker/data:/root/data:z"
-      # - "./netmaker/certs:/etc/netmaker:z"
 
-- name: "Run mosquitto mqtt container"
+- name: "Run netmaker ui"
   containers.podman.podman_container:
     pod: "netmaker-pod"
-    name: "netmaker-mqtt"
-    image: "docker.io/library/eclipse-mosquitto:2.0.15"
+    name: "netmaker-ui"
+    image: "docker.io/gravitl/netmaker-ui:v0.18.1"
     state: "started"
     restart_policy: "no"
     recreate: yes
     tty: no
     detach: yes
-    volume:
-      - "./netmaker/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:z"
-      - "./netmaker/mosquitto/data:/mosquitto/data"
+    env:
+      BACKEND_URL: "https://{{ netmaker_api_subdomain }}.{{ netmaker_domain }}"
