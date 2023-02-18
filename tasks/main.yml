@@ -69,5 +69,5 @@
     tty: no
     detach: yes
     volume:
-      - "./netmaker/mosquitto/mosquitto.conf:/root/data:z"
+      - "./netmaker/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:z"
       - "./netmaker/mosquitto/data:/mosquitto/data"
