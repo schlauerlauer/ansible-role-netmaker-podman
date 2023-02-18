@@ -1,6 +1,15 @@
 ---
 # defaults file for ansible-role-netmaker-podman
 
+## change this
+netmaker_main_key: "Laziness-Latter-Unrivaled-Handcraft-Rut"
+
+## domains
+netmaker_domain: "example.com"
+netmaker_subdomain: "broker"
+netmaker_api_subdomain: "api"
+
+## ports
 netmaker_server_port: 8443
 netmaker_mqtt_port: 8883
 netmaker_dashboard_port: 8080

@@ -1,6 +1,11 @@
 ---
 # tasks file for ansible-role-netmaker-podman
 
+- name: "Copy files"
+  copy:
+    src: "data"
+    dest: "./netmaker/"
+
 - name: "Create netmaker pod"
   containers.podman.podman_pod:
     name: "netmaker-pod"
@@ -12,3 +17,57 @@
     - "{{ netmaker_mqtt_port }}:8883"
     - "{{ netmaker_dashboard_port }}:8080"
     - "{{ netmaker_wireguard_port_range }}:51821-51830/udp"
+
+- name: "Run netmaker server container"
+  containers.podman.podman_container:
+    pod: "netmaker-pod"
+    name: "netmaker-server"
+    image: "docker.io/gravitl/netmaker:v0.18.0"
+    state: "started"
+    restart_policy: "no"
+    recreate: no
+    tty: no
+    detach: yes
+    env:
+      SERVER_NAME: "{{ netmaker_subdomain }}.{{ netmaker_domain }}"
+      SERVER_API_CONN_STRING: "{{ netmaker_api_subdomain }}.{{ netmaker_domain }}:{{ netmaker_server_port }}"
+      MASTER_KEY: "{{ netmaker_main_key }}"
+      DATABASE: "sqlite"
+      NODE_ID: "netmaker-server"
+      MQ_HOST: "127.0.0.1"
+      MQ_PORT: "{{ netmaker_mqtt_port }}"
+      TELEMETRY: "off"
+      VERBOSITY: "3"
+    cap_add:
+      - "NET_ADMIN"
+      - "NET_RAW"
+      - "SYS_MODULE"
+    sysctl:
+      net.ipv4.ip_forward: 1
+      net.ipv4.conf.all.src_valid_mark: 1
+      net.ipv6.conf.all.disable_ipv6: 0
+      net.ipv6.conf.all.forwarding: 1
+    volume:
+      - "./netmaker/data:/root/data:z"
+      # - "./netmaker/certs:/etc/netmaker:z"
+
+# TODO
+- name: "Run mosquitto mqtt container"
+  containers.podman.podman_container:
+    pod: "netmaker-pod"
+    name: "netmaker-mqtt"
+    image: "docker.io/gravitl/netmaker:v0.18.0"
+    state: "started"
+    restart_policy: "no"
+    recreate: no
+    tty: no
+    detach: yes
+    env:
+
+    cap_add:
+      - "NET_ADMIN"
+      - "NET_RAW"
+      - "SYS_MODULE"
+    volume:
+      - "./netmaker/moquitto.conf:/root/data:z"
+      # - "./certs:/etc/netmaker:z"
