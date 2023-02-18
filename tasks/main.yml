@@ -60,10 +60,10 @@
   containers.podman.podman_container:
     pod: "netmaker-pod"
     name: "netmaker-mqtt"
-    image: "docker.io/library/ecplise-mosquitto:2.0.15"
+    image: "docker.io/library/eclipse-mosquitto:2.0.15"
     state: "started"
     restart_policy: "no"
-    recreate: no
+    recreate: yes
     tty: no
     detach: yes
     volume:
