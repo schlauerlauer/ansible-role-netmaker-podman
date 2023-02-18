@@ -1,14 +1,14 @@
 ---
 # tasks file for ansible-role-netmaker-podman
 
-- name: "Copy files"
+- name: "Copy netmaker files"
   copy:
     src: "data"
     dest: "./netmaker/"
 
-- name: "Copy mosquitto config"
+- name: "Copy mosquitto files"
   copy:
-    src: "mosquitto.conf"
+    src: "mosquitto"
     dest: "./netmaker/"
 
 - name: "Create netmaker pod"
@@ -56,23 +56,16 @@
       - "./netmaker/data:/root/data:z"
       # - "./netmaker/certs:/etc/netmaker:z"
 
-# TODO
 - name: "Run mosquitto mqtt container"
   containers.podman.podman_container:
     pod: "netmaker-pod"
     name: "netmaker-mqtt"
-    image: "docker.io/gravitl/netmaker:v0.18.0"
+    image: "docker.io/library/ecplise-mosquitto:2.0.15"
     state: "started"
     restart_policy: "no"
     recreate: no
     tty: no
     detach: yes
-    env:
-
-    cap_add:
-      - "NET_ADMIN"
-      - "NET_RAW"
-      - "SYS_MODULE"
     volume:
-      - "./netmaker/mosquitto.conf:/root/data:z"
-      # - "./certs:/etc/netmaker:z"
+      - "./netmaker/mosquitto/mosquitto.conf:/root/data:z"
+      - "./netmaker/mosquitto/data:/mosquitto/data"
