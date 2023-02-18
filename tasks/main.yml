@@ -8,7 +8,7 @@
 
 - name: "Copy mosquitto config"
   copy:
-    src: "mosuitto.conf"
+    src: "mosquitto.conf"
     dest: "./netmaker/"
 
 - name: "Create netmaker pod"
