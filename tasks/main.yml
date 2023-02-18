@@ -19,7 +19,7 @@
     recreate: yes
     ports:
     - "{{ netmaker_server_port }}:8443"
-    - "{{ netmaker_mqtt_port }}:1883"
+    - "{{ netmaker_mqtt_port }}:8883"
     - "{{ netmaker_dashboard_port }}:8080"
     - "{{ netmaker_wireguard_port_range }}:51821-51830/udp"
 
@@ -41,7 +41,7 @@
       NODE_ID: "netmaker-server"
       MQ_HOST: "127.0.0.1"
       MQ_PORT: "443"
-      MQ_SERVER_PORT: "1883"
+      MQ_SERVER_PORT: "8883"
       MQ_ADMIN_PASSWORD: "{{ netmaker_mq_password }}"
       TELEMETRY: "off"
       VERBOSITY: "3"

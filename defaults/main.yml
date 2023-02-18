@@ -12,6 +12,6 @@ netmaker_api_subdomain: "api"
 
 ## ports forwards
 netmaker_server_port: 8443
-netmaker_mqtt_port: 1883
+netmaker_mqtt_port: 8883
 netmaker_dashboard_port: 8080
 netmaker_wireguard_port_range: "51821-51830"
