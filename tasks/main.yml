@@ -69,5 +69,5 @@
       - "NET_RAW"
       - "SYS_MODULE"
     volume:
-      - "./netmaker/moquitto.conf:/root/data:z"
+      - "./netmaker/mosquitto.conf:/root/data:z"
       # - "./certs:/etc/netmaker:z"
